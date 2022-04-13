@@ -3,9 +3,9 @@ import React from 'react'
 const AuthLayout = () => {
     return (
         <div>
-            AuthLayou
+            AuthLayout
         </div>
     )
 }
 
-export default AuthLayou
+export default AuthLayout
