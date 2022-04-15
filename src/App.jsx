@@ -1,13 +1,13 @@
-import AuthLayout from 'layouts/AuthLayout';
-import PrivateLayout from 'layouts/PrivateLayout';
-import PublicLayout from 'layouts/PublicLayout';
-import Admin from 'pages/admin/Admin';
-import Clientes from 'pages/admin/Clientes';
-import Vehiculos from 'pages/admin/Vehiculos';
-import Index from 'pages/Index';
-import Login from 'pages/Login';
-import Registro from 'pages/Registro';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import AuthLayout from 'layouts/AuthLayout'
+import PrivateLayout from 'layouts/PrivateLayout'
+import PublicLayout from 'layouts/PublicLayout'
+import Admin from 'pages/admin/Admin'
+import Clientes from 'pages/admin/Clientes'
+import Vehiculos from 'pages/admin/Vehiculos'
+import Index from 'pages/Index'
+import Login from 'pages/Login'
+import Registro from 'pages/Registro'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import 'styles/styles.css'
 
 function App() {
@@ -55,4 +55,4 @@ function App() {
   );
 }
 
-export default App;
+export default App
