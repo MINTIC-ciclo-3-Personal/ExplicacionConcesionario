@@ -5,46 +5,55 @@ import React, { useEffect, useState } from 'react'
 
 const Vehiculos = () => {
 
-  const [nombreVehiculo,setNombreVehiculo] =useState('');
-  const [marcaVehiculo,setMarcaVehiculo] =useState('');
-  
+  const [edad, setEdad] = useState('');
+  const [esMenorDeEdad, setEsMenorDeEdad] = useState('')
+  const [mostrarCamposAdicionales,setMostrarCamposAdicionales]=useState(false);
 
   useEffect(() => {
-    console.log("hola, soy un use effect que se ejecuta una vez cuando la pagina se renderiza, porque tiene el array de dependencias vacio");
-    //paso 2
-    //paso 3
-    //paso 4
-  }, [])
-
- /*  useEffect(()=>{
-    console.log("este es un use effect que se ejecuta SIEMPRE que cambia una variable");
-  }); se explica sólo para que sepan que existe pero no se debe usar */
-
-  useEffect(() => {
-    console.log("esto es una funcion que se ejecuta cada que cambia el valor de nombreVehiculo");
-    console.log("El valor de la variable es ", nombreVehiculo)
-  },[nombreVehiculo]);
-
-  const enviarDatosAlBackend=()=> {
-    console.log('El valor de la variable nombreVehiculo es ', nombreVehiculo);
-    console.log('El valor de la variable nombreVehiculo es ', marcaVehiculo);
-  }
-
+    if (edad >= 18) {
+      setEsMenorDeEdad(false)
+    } else {
+      setEsMenorDeEdad(true)
+    }
+  }, [edad]);
   return (
-    /* <form className='flex flex-col'>
-      <h2>Formulario de creación de vehículos</h2>
-      <input onChange={(e) => { setNombreVehiculo(e.target.value) }} type="text" placeholder='Nombre del vehiculo' />
-      <input onChange={(e) => { setMarcaVehiculo(e.target.value) }} type="text" placeholder='Marca del vehiculo' />
-      <input type="text" placeholder='Modelo del vehiculo' />
-      <button type="button" onClick={enviarDatosAlBackend} className='bg-indigo-500 text-white'>Enviar datos</button>
-    </form> */
     <form className='flex flex-col'>
       <h2>Formulario de creación de vehículos</h2>
       <label htmlFor="edad">
         Por favor ingrese su edad
-        <input className='border border-gray-600' name='edad' type="number" />
-        <button type="button" onClick={enviarDatosAlBackend} className='bg-indigo-500 text-white'>Enviar datos</button>
+        <input
+          value={edad}
+          onChange={(e) => {
+            setEdad(e.target.value);
+          }}
+          className='border border-gray-600' name='edad' type="number" />
       </label>
+      {esMenorDeEdad ? (
+        <span className='text-3xl text-red-500'>
+          ¡Usted es menor de edad, no puede hacer pagos!
+        </span>
+      ) : (
+        <span className='text-3xl text-green-500'>
+          ¡Usted es mayor de edad, si puede hacer pagos!
+        </span>
+      )}
+      <button
+        onClick={() => setMostrarCamposAdicionales(!mostrarCamposAdicionales)}
+        type='button'
+        className='text-white bg-indigo-500'
+      >
+        Mostrar campos adicionales
+      </button>
+      {mostrarCamposAdicionales &&(
+        <div>
+          <input className='border bg-gray-400 my-2 p-3' placeholder='dato nuevo' type="text" />
+          <input className='border bg-gray-400 my-2 p-3' placeholder='dato nuevo' type="text" />
+          <input className='border bg-gray-400 my-2 p-3' placeholder='dato nuevo' type="text" />
+          <input className='border bg-gray-400 my-2 p-3' placeholder='dato nuevo' type="text" />
+          <input className='border bg-gray-400 my-2 p-3' placeholder='dato nuevo' type="text" />
+          <input className='border bg-gray-400 my-2 p-3' placeholder='dato nuevo' type="text" />
+        </div>
+      )}
     </form>
   )
 }
