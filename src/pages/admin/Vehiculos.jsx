@@ -78,9 +78,9 @@ const Vehiculos = () => {
       {mostrarTabla ? (<TablaVehiculos listaVehiculos={vehiculos} />
       ) : (
         <FromularioCreacionVehiculos
-          funcionParaMostrarLaTabla={setMostrarTabla}
+          setMostrarTabla={setMostrarTabla}
           listaVehiculos={vehiculos}
-          funcionParaAgregarUnVehiculo={setVehiculos} />
+          setVehiculos={setVehiculos} />
       )}
       <ToastContainer position="bottom-center" autoClose={5000} />
     </div>
@@ -121,9 +121,9 @@ const TablaVehiculos = ({ listaVehiculos }) => {
 }
 
 const FromularioCreacionVehiculos = ({
-  funcionParaMostrarLaTabla,
+  setMostrarTabla,
   listaVehiculos,
-  funcionParaAgregarUnVehiculo }) => {
+  setVehiculos }) => {
 
   const form = useRef(null);
 
@@ -131,11 +131,14 @@ const FromularioCreacionVehiculos = ({
   const submitForm = (e) => {   
     e.preventDefault();
     const fd=new FormData(form.current);
+    const nuevoVehiculo={};
+    
     fd.forEach((value,key)=> {
-      console.log(key,value);
+      nuevoVehiculo[key]=value;
     })
-    console.log('datos del form enviados', fd);
-
+    setMostrarTabla(true)
+    toast.successc("vehículo agregado con éxito")
+    setVehiculos(...listaVehiculos,nuevoVehiculo)
   }
 
   return (
@@ -158,8 +161,11 @@ const FromularioCreacionVehiculos = ({
             className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
             name="marca"
             required
+            defaultValue={0}
           >
-            <option disabled>Seleccione una opción</option>
+            <option disabled value={0}>
+              Seleccione una opción
+            </option>
             <option>Renault</option>
             <option>Toyota</option>
             <option>Ford</option>
