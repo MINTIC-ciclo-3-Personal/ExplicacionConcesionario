@@ -11,6 +11,7 @@ import Registro from 'pages/Registro'
 import { useEffect, useState } from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import 'styles/styles.css'
+import 'styles/responsive.css'
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
