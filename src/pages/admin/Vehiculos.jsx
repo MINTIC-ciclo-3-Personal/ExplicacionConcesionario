@@ -131,14 +131,15 @@ const FromularioCreacionVehiculos = ({
   const submitForm = (e) => {   
     e.preventDefault();
     const fd=new FormData(form.current);
+
     const nuevoVehiculo={};
-    
     fd.forEach((value,key)=> {
       nuevoVehiculo[key]=value;
-    })
+    });
+
     setMostrarTabla(true)
-    toast.successc("vehículo agregado con éxito")
-    setVehiculos(...listaVehiculos,nuevoVehiculo)
+    setVehiculos([...listaVehiculos, nuevoVehiculo])
+    toast.success("vehículo agregado con éxito")
   }
 
   return (

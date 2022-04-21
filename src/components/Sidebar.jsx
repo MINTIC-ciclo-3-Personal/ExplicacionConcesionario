@@ -1,3 +1,4 @@
+import useActiveRoute from 'hooks/useActiveRoute'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import ImagenLogo from './ImagenLogo'
@@ -20,9 +21,15 @@ const Sidebar = () => {
 }
 
 const Ruta = ({ icono, ruta, nombre }) => {
+
+    const isActive = useActiveRoute(ruta);
     return (
         <Link to={ruta}>
-            <button className='p-1 my-2 w-full text-white bg-indigo-700 flex items-center rounded-md hover:bg-indigo-900'>
+            <button
+                className={`p-1 my-2 w-full text-white 
+                ${isActive ? 'bg-indigo-700' : 'bg-gray-700'
+                    } flex items-center rounded-md hover:bg-indigo-900`}
+            >
                 <i className={`${icono} w-10`}></i>
                 {nombre}
             </button>
