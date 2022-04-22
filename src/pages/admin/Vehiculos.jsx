@@ -2,40 +2,41 @@ import userEvent from '@testing-library/user-event';
 import React, { useEffect, useRef, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { nanoid } from 'nanoid';
 
 //Realizar un formulario que le pida al usuario su edad y muestre un mensaje
 //que diga si es mayor de edad o no
 
 const vehiculosBackend = [
   {
-    nombre: "Corolla",
-    marca: "Toyota",
-    modelo: 2014
+    name: "Corolla",
+    brand: "Toyota",
+    model: 2014
   },
   {
-    nombre: "Sandero",
-    marca: "Renault",
-    modelo: 2020
+    name: "Sandero",
+    brand: "Renault",
+    model: 2020
   },
   {
-    nombre: "Rav4",
-    marca: "Toyota",
-    modelo: 2021
+    name: "Rav4",
+    brand: "Toyota",
+    model: 2021
   },
   {
-    nombre: "Fiesta",
-    marca: "Ford",
-    modelo: 2017
+    name: "Fiesta",
+    brand: "Ford",
+    model: 2017
   },
   {
-    nombre: "Mazda 3",
-    marca: "Mazda",
-    modelo: 2020
+    name: "Mazda 3",
+    brand: "Mazda",
+    model: 2020
   },
   {
-    nombre: "Onix",
-    marca: "Chevrolet",
-    modelo: 2020
+    name: "Onix",
+    brand: "Chevrolet",
+    model: 2020
   },
 
 ]
@@ -88,35 +89,112 @@ const Vehiculos = () => {
 }
 
 const TablaVehiculos = ({ listaVehiculos }) => {
+  const form=useRef(null);
   useEffect(() => {
-
   }, [listaVehiculos])
-  console.log('Este es el listado de vehiculos en el componente de tabla', listaVehiculos)
+  //console.log('Este es el listado de vehiculos en el componente de tabla', listaVehiculos)
+
+  const submitEdit= (e)=> {
+    e.preventDefault();
+    const fd=new FormData(form.current)
+    console.log(e);
+  }
+
   return (
     <div className='flex flex-col items-center justify-center'>
       <h2 className='text-2xl font-extrabold text-gray-800'>Todos los vehículos</h2>
-      <table>
-        <thead>
-          <tr>
-            <th className='px-5'>Nombre del vehículo</th>
-            <th className='px-5'>Marca del vehículo</th>
-            <th className='px-5'>Modelo del vehículo</th>
-          </tr>
-        </thead>
-        <tbody>
-
-          {listaVehiculos.map((vehiculo) => {
-            return (
-              <tr>
-                <th>{vehiculo.nombre}</th>
-                <th>{vehiculo.marca}</th>
-                <th>{vehiculo.modelo}</th>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+      <form ref={form} onSubmit={submitEdit} className='w-full'>
+        <table className='tabla'>
+          <thead>
+            <tr>
+              <th>Nombre del vehículo</th>
+              <th>Marca del vehículo</th>
+              <th>Modelo del vehículo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {listaVehiculos.map((vehiculo) => {
+              return (
+                <FilaVehiculo key={nanoid()} vehiculo={vehiculo} />
+              )
+            })}
+          </tbody>
+        </table>
+      </form>
     </div>
+  )
+}
+
+const FilaVehiculo = ({vehiculo}) => {
+  const [edit, setEdit] = useState(false);
+const [infoNuevoVehiculo,setInfoNuevoVehiculo]=useState({
+  name:vehiculo.name,
+  brand:vehiculo.brand,
+  model:vehiculo.model,
+})
+
+  const actualizarVehiculo =()=>{
+    console.log(infoNuevoVehiculo);
+    //enviar la info al backend
+  }
+
+
+  const eliminarVehiculo=()=>{
+
+  }
+  return (
+    <tr>
+      {edit ? (
+        <>
+          <td>
+            <input
+              className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
+              type="text"
+              value={infoNuevoVehiculo.name}
+              onChange={e=>setInfoNuevoVehiculo({...infoNuevoVehiculo,name:e.target.value})}
+            />
+          </td>
+          <td>
+            <input
+              className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
+              type="text"
+              value={infoNuevoVehiculo.brand}
+              onChange={e=>setInfoNuevoVehiculo({...infoNuevoVehiculo,brand:e.target.value})}
+            />
+          </td>
+          <td>
+            <input
+              className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
+              type="text"
+              value={infoNuevoVehiculo.model}
+              onChange={e=>setInfoNuevoVehiculo({...infoNuevoVehiculo,model:e.target.value})}
+            />
+          </td>
+        </>
+      ) : (
+        <>
+          <td>{vehiculo.name}</td>
+          <td>{vehiculo.brand}</td>
+          <td>{vehiculo.model}</td>
+        </>
+      )}
+
+      <td>
+        <div className='flex w-full justify-around'>
+          {edit ? (
+              <i
+                onClick={() => actualizarVehiculo()}
+                class="fa-solid fa-check text-green-700 hover:text-green-500"></i>
+          ) : (
+            <i
+              onClick={() => setEdit(!edit)}
+              className="fa-solid fa-pen-to-square hover:text-yellow-500"></i>
+          )}
+          <i onClick={()=> eliminarVehiculo()} className="fa-solid fa-trash-can hover:text-red-500"></i>
+        </div>
+      </td>
+    </tr>
   )
 }
 
@@ -128,13 +206,13 @@ const FromularioCreacionVehiculos = ({
   const form = useRef(null);
 
 
-  const submitForm = (e) => {   
+  const submitForm = (e) => {
     e.preventDefault();
-    const fd=new FormData(form.current);
+    const fd = new FormData(form.current);
 
-    const nuevoVehiculo={};
-    fd.forEach((value,key)=> {
-      nuevoVehiculo[key]=value;
+    const nuevoVehiculo = {};
+    fd.forEach((value, key) => {
+      nuevoVehiculo[key] = value;
     });
 
     setMostrarTabla(true)
