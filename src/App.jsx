@@ -1,16 +1,15 @@
-import { DarkModeContex } from 'context/darkMode';
-import AuthLayout from 'layouts/AuthLayout';
+import React, { useState, useEffect } from 'react';
 import PrivateLayout from 'layouts/PrivateLayout';
 import PublicLayout from 'layouts/PublicLayout';
-import Admin from 'pages/admin/Index';
-import Clientes from 'pages/admin/Clientes';
-import Vehiculos from 'pages/admin/Vehiculos';
 import Index from 'pages/Index';
-import Login from 'pages/Login';
-import Registro from 'pages/Registro';
-import { useEffect, useState } from 'react';
+import Admin from 'pages/admin/Index';
+import Vehiculos from 'pages/admin/Vehiculos';
+import Login from 'pages/auth/Login';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import 'styles/styles.css';
+import Registro from 'pages/auth/Registro';
+import AuthLayout from 'layouts/AuthLayout';
+import { DarkModeContext } from 'context/darkMode';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -20,17 +19,14 @@ function App() {
 
   return (
     <div className='App'>
-      <DarkModeContex.Provider value={{ darkMode, setDarkMode }} >
+      <DarkModeContext.Provider value={{ darkMode, setDarkMode }}>
         <Router>
           <Switch>
-            <Route path={['/admin', '/admin/vehiculos', '/admin/clientes']} >
+            <Route path={['/admin', '/admin/vehiculos']}>
               <PrivateLayout>
                 <Switch>
                   <Route path='/admin/vehiculos'>
                     <Vehiculos />
-                  </Route>
-                  <Route path='/admin/clientes'>
-                    <Clientes />
                   </Route>
                   <Route path='/admin'>
                     <Admin />
@@ -52,14 +48,14 @@ function App() {
             </Route>
             <Route path={['/']}>
               <PublicLayout>
-                  <Route path='/'>
-                    <Index />
-                  </Route>
+                <Route path='/'>
+                  <Index />
+                </Route>
               </PublicLayout>
             </Route>
           </Switch>
         </Router>
-      </DarkModeContex.Provider>
+      </DarkModeContext.Provider>
     </div>
   );
 }

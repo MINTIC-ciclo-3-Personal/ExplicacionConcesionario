@@ -1,76 +1,73 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { nanoid } from 'nanoid';
-
-//Realizar un formulario que le pida al usuario su edad y muestre un mensaje
-//que diga si es mayor de edad o no
+// realizar un formulario que le pida al usuario su edad y muestre un mensaje
+// que diga si el usuario es mayor de edad o no
 
 const vehiculosBackend = [
   {
-    name: "Corolla",
-    brand: "Toyota",
-    model: 2014
+    nombre: 'Corolla',
+    marca: 'Toyota',
+    modelo: 2014,
   },
   {
-    name: "Sandero",
-    brand: "Renault",
-    model: 2020
+    nombre: 'Sandero',
+    marca: 'Renault',
+    modelo: 2020,
   },
   {
-    name: "Rav4",
-    brand: "Toyota",
-    model: 2021
+    nombre: 'Rav4',
+    marca: 'Toyota',
+    modelo: 2021,
   },
   {
-    name: "Fiesta",
-    brand: "Ford",
-    model: 2017
+    nombre: 'Fiesta',
+    marca: 'Ford',
+    modelo: 2017,
   },
   {
-    name: "Mazda 3",
-    brand: "Mazda",
-    model: 2020
+    nombre: 'Mazda 3',
+    marca: 'Mazda',
+    modelo: 2020,
   },
   {
-    name: "Onix",
-    brand: "Chevrolet",
-    model: 2020
+    nombre: 'Chevrolet',
+    marca: 'Onix',
+    modelo: 2020,
   },
 ];
 
 const Vehiculos = () => {
-  const [mostrarTabla, setMostrarTabla] = useState(true); //Estos son estados
+  const [mostrarTabla, setMostrarTabla] = useState(true);
   const [vehiculos, setVehiculos] = useState([]);
-  const [textoBoton, setTextoBoton] = useState('Crear Nuevo Vechículo');
-  const [colorBoton, setColorBoton] = useState('bg-indigo-500');
+  const [textoBoton, setTextoBoton] = useState('Crear Nuevo Vehículo');
+  const [colorBoton, setColorBoton] = useState('indigo');
 
   useEffect(() => {
-    //obtener lista del vehiculo desde el frontend
+    //obtener lista de vehículos desde el backend
     setVehiculos(vehiculosBackend);
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (mostrarTabla) {
-      setTextoBoton('Crear Nuevo Vechículo');
-      setColorBoton('bg-indigo-500');
+      setTextoBoton('Crear Nuevo Vehículo');
+      setColorBoton('indigo');
     } else {
-      setTextoBoton('Mostrar Todos los Vehículos');
-      setColorBoton('bg-red-500');
+      setTextoBoton('Mostrar Todos los vehículos');
+      setColorBoton('green');
     }
   }, [mostrarTabla]);
-
   return (
     <div className='flex h-full w-full flex-col items-center justify-start p-8'>
       <div className='flex flex-col'>
         <h2 className='text-3xl font-extrabold text-gray-900'>
-          Página de administración de vehiculos
+          Página de administración de vehículos
         </h2>
         <button
           onClick={() => {
             setMostrarTabla(!mostrarTabla);
           }}
-          className={`text-white ${colorBoton} p-5 rounded-full m-6 w-280`}
+          className={`text-white bg-${colorBoton}-500 p-5 rounded-full m-6 w-28 self-end`}
         >
           {textoBoton}
         </button>
@@ -78,167 +75,87 @@ const Vehiculos = () => {
       {mostrarTabla ? (
         <TablaVehiculos listaVehiculos={vehiculos} />
       ) : (
-        <FromularioCreacionVehiculos
+        <FormularioCreacionVehiculos
           setMostrarTabla={setMostrarTabla}
           listaVehiculos={vehiculos}
           setVehiculos={setVehiculos}
         />
       )}
-      <ToastContainer position="bottom-center" autoClose={5000} />
+      <ToastContainer position='bottom-center' autoClose={5000} />
     </div>
   );
 };
 
 const TablaVehiculos = ({ listaVehiculos }) => {
-  const form = useRef(null);
   useEffect(() => {
-    //console.log('Este es el listado de vehiculos en el componente de tabla', listaVehiculos)
+    console.log('este es el listado de vehiculos en el componente de tabla', listaVehiculos);
   }, [listaVehiculos]);
-
-  const submitEdit = (e) => {
-    e.preventDefault();
-    const fd = new FormData(form.current)
-    console.log(e);
-  }
-
   return (
     <div className='flex flex-col items-center justify-center'>
       <h2 className='text-2xl font-extrabold text-gray-800'>Todos los vehículos</h2>
-      <form ref={form} onSubmit={submitEdit} className='w-full'>
-        <table className='tabla'>
-          <thead>
-            <tr>
-              <th>Nombre del vehículo</th>
-              <th>Marca del vehículo</th>
-              <th>Modelo del vehículo</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {listaVehiculos.map((vehiculo) => {
-              return (
-                <FilaVehiculo key={nanoid()} vehiculo={vehiculo} />
-              );
-            })}
-          </tbody>
-        </table>
-      </form>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre del vehículo</th>
+            <th>Marca del vehículo</th>
+            <th>Modelo del vehículo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {listaVehiculos.map((vehiculo) => {
+            return (
+              <tr>
+                <td>{vehiculo.nombre}</td>
+                <td>{vehiculo.marca}</td>
+                <td>{vehiculo.modelo}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };
 
-const FilaVehiculo = ({ vehiculo }) => {
-  const [edit, setEdit] = useState(false);
-  const [infoNuevoVehiculo, setInfoNuevoVehiculo] = useState({
-    name: vehiculo.name,
-    brand: vehiculo.brand,
-    model: vehiculo.model,
-  })
-
-  const actualizarVehiculo = () => {
-    console.log(infoNuevoVehiculo);
-    //enviar la info al backend
-  }
-
-
-  const eliminarVehiculo = () => {
-
-  }
-  return (
-    <tr>
-      {edit ? (
-        <>
-          <td>
-            <input
-              className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
-              type="text"
-              value={infoNuevoVehiculo.name}
-              onChange={e => setInfoNuevoVehiculo({ ...infoNuevoVehiculo, name: e.target.value })}
-            />
-          </td>
-          <td>
-            <input
-              className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
-              type="text"
-              value={infoNuevoVehiculo.brand}
-              onChange={e => setInfoNuevoVehiculo({ ...infoNuevoVehiculo, brand: e.target.value })}
-            />
-          </td>
-          <td>
-            <input
-              className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
-              type="text"
-              value={infoNuevoVehiculo.model}
-              onChange={e => setInfoNuevoVehiculo({ ...infoNuevoVehiculo, model: e.target.value })}
-            />
-          </td>
-        </>
-      ) : (
-        <>
-          <td>{vehiculo.name}</td>
-          <td>{vehiculo.brand}</td>
-          <td>{vehiculo.model}</td>
-        </>
-      )}
-
-      <td>
-        <div className='flex w-full justify-around'>
-          {edit ? (
-            <i
-              onClick={() => actualizarVehiculo()}
-              class="fa-solid fa-check text-green-700 hover:text-green-500"></i>
-          ) : (
-            <i
-              onClick={() => setEdit(!edit)}
-              className="fa-solid fa-pen-to-square hover:text-yellow-500"></i>
-          )}
-          <i onClick={() => eliminarVehiculo()} className="fa-solid fa-trash-can hover:text-red-500"></i>
-        </div>
-      </td>
-    </tr>
-  )
-}
-
-const FromularioCreacionVehiculos = ({
-  setMostrarTabla,
-  listaVehiculos,
-  setVehiculos }) => {
-
+const FormularioCreacionVehiculos = ({ setMostrarTabla, listaVehiculos, setVehiculos }) => {
   const form = useRef(null);
 
   const submitForm = (e) => {
     e.preventDefault();
     const fd = new FormData(form.current);
-
+    
     const nuevoVehiculo = {};
     fd.forEach((value, key) => {
       nuevoVehiculo[key] = value;
     });
 
-    setMostrarTabla(true)
-    setVehiculos([...listaVehiculos, nuevoVehiculo])
-    toast.success("vehículo agregado con éxito")
+    setMostrarTabla(true);
+    setVehiculos([...listaVehiculos, nuevoVehiculo]);
+    // identificar el caso de éxito y mostrar un toast de éxito
+    toast.success('Vehículo agregado con éxito');
+    // identificar el caso de error y mostrar un toast de error
+    // toast.error('Error creando un vehículo');
   };
 
   return (
     <div className='flex flex-col items-center justify-center'>
-      <h2 className='text-2xl font-extrabold text-gray-800'>Crear Nuevo Vehículo</h2>
+      <h2 className='text-2xl font-extrabold text-gray-800'>Crear nuevo vehículo</h2>
       <form ref={form} onSubmit={submitForm} className='flex flex-col'>
         <label className='flex flex-col' htmlFor='nombre'>
-          Nombre del vehiculo
+          Nombre del vehículo
           <input
             name='nombre'
             className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
-            type="text"
+            type='text'
             placeholder='Corolla'
             required
           />
         </label>
         <label className='flex flex-col' htmlFor='marca'>
-          Marca del vehiculo
+          Marca del vehículo
           <select
             className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
-            name="marca"
+            name='marca'
             required
             defaultValue={0}
           >
@@ -253,26 +170,27 @@ const FromularioCreacionVehiculos = ({
           </select>
         </label>
         <label className='flex flex-col' htmlFor='modelo'>
-          Modelo del vehiculo
+          Modelo del vehículo
           <input
             name='modelo'
             className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
-            type="number"
+            type='number'
             min={1992}
             max={2022}
             placeholder='2014'
             required
           />
         </label>
+
         <button
           type='submit'
           className='col-span-2 bg-green-400 p-2 rounded-full shadow-md hover:bg-green-600 text-white'
         >
-          Guardar Vehículo
+          Guardar vehiculo
         </button>
       </form>
     </div>
-
   );
 };
+
 export default Vehiculos;
