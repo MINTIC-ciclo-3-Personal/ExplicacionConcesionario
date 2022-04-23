@@ -1,4 +1,3 @@
-import userEvent from '@testing-library/user-event';
 import React, { useEffect, useRef, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -38,11 +37,9 @@ const vehiculosBackend = [
     brand: "Chevrolet",
     model: 2020
   },
-
-]
+];
 
 const Vehiculos = () => {
-
   const [mostrarTabla, setMostrarTabla] = useState(true); //Estos son estados
   const [vehiculos, setVehiculos] = useState([]);
   const [textoBoton, setTextoBoton] = useState('Crear Nuevo Vechículo');
@@ -66,37 +63,41 @@ const Vehiculos = () => {
   return (
     <div className='flex h-full w-full flex-col items-center justify-start p-8'>
       <div className='flex flex-col'>
-        <h2 className='text-3xl font-extrabold text-gray-900'>Página de administración de vehiculos</h2>
+        <h2 className='text-3xl font-extrabold text-gray-900'>
+          Página de administración de vehiculos
+        </h2>
         <button
           onClick={() => {
-            setMostrarTabla(!mostrarTabla)
+            setMostrarTabla(!mostrarTabla);
           }}
           className={`text-white ${colorBoton} p-5 rounded-full m-6 w-280`}
         >
           {textoBoton}
         </button>
       </div>
-      {mostrarTabla ? (<TablaVehiculos listaVehiculos={vehiculos} />
+      {mostrarTabla ? (
+        <TablaVehiculos listaVehiculos={vehiculos} />
       ) : (
         <FromularioCreacionVehiculos
           setMostrarTabla={setMostrarTabla}
           listaVehiculos={vehiculos}
-          setVehiculos={setVehiculos} />
+          setVehiculos={setVehiculos}
+        />
       )}
       <ToastContainer position="bottom-center" autoClose={5000} />
     </div>
-  )
-}
+  );
+};
 
 const TablaVehiculos = ({ listaVehiculos }) => {
-  const form=useRef(null);
+  const form = useRef(null);
   useEffect(() => {
-  }, [listaVehiculos])
-  //console.log('Este es el listado de vehiculos en el componente de tabla', listaVehiculos)
+    //console.log('Este es el listado de vehiculos en el componente de tabla', listaVehiculos)
+  }, [listaVehiculos]);
 
-  const submitEdit= (e)=> {
+  const submitEdit = (e) => {
     e.preventDefault();
-    const fd=new FormData(form.current)
+    const fd = new FormData(form.current)
     console.log(e);
   }
 
@@ -117,30 +118,30 @@ const TablaVehiculos = ({ listaVehiculos }) => {
             {listaVehiculos.map((vehiculo) => {
               return (
                 <FilaVehiculo key={nanoid()} vehiculo={vehiculo} />
-              )
+              );
             })}
           </tbody>
         </table>
       </form>
     </div>
-  )
-}
+  );
+};
 
-const FilaVehiculo = ({vehiculo}) => {
+const FilaVehiculo = ({ vehiculo }) => {
   const [edit, setEdit] = useState(false);
-const [infoNuevoVehiculo,setInfoNuevoVehiculo]=useState({
-  name:vehiculo.name,
-  brand:vehiculo.brand,
-  model:vehiculo.model,
-})
+  const [infoNuevoVehiculo, setInfoNuevoVehiculo] = useState({
+    name: vehiculo.name,
+    brand: vehiculo.brand,
+    model: vehiculo.model,
+  })
 
-  const actualizarVehiculo =()=>{
+  const actualizarVehiculo = () => {
     console.log(infoNuevoVehiculo);
     //enviar la info al backend
   }
 
 
-  const eliminarVehiculo=()=>{
+  const eliminarVehiculo = () => {
 
   }
   return (
@@ -152,7 +153,7 @@ const [infoNuevoVehiculo,setInfoNuevoVehiculo]=useState({
               className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
               type="text"
               value={infoNuevoVehiculo.name}
-              onChange={e=>setInfoNuevoVehiculo({...infoNuevoVehiculo,name:e.target.value})}
+              onChange={e => setInfoNuevoVehiculo({ ...infoNuevoVehiculo, name: e.target.value })}
             />
           </td>
           <td>
@@ -160,7 +161,7 @@ const [infoNuevoVehiculo,setInfoNuevoVehiculo]=useState({
               className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
               type="text"
               value={infoNuevoVehiculo.brand}
-              onChange={e=>setInfoNuevoVehiculo({...infoNuevoVehiculo,brand:e.target.value})}
+              onChange={e => setInfoNuevoVehiculo({ ...infoNuevoVehiculo, brand: e.target.value })}
             />
           </td>
           <td>
@@ -168,7 +169,7 @@ const [infoNuevoVehiculo,setInfoNuevoVehiculo]=useState({
               className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
               type="text"
               value={infoNuevoVehiculo.model}
-              onChange={e=>setInfoNuevoVehiculo({...infoNuevoVehiculo,model:e.target.value})}
+              onChange={e => setInfoNuevoVehiculo({ ...infoNuevoVehiculo, model: e.target.value })}
             />
           </td>
         </>
@@ -183,15 +184,15 @@ const [infoNuevoVehiculo,setInfoNuevoVehiculo]=useState({
       <td>
         <div className='flex w-full justify-around'>
           {edit ? (
-              <i
-                onClick={() => actualizarVehiculo()}
-                class="fa-solid fa-check text-green-700 hover:text-green-500"></i>
+            <i
+              onClick={() => actualizarVehiculo()}
+              class="fa-solid fa-check text-green-700 hover:text-green-500"></i>
           ) : (
             <i
               onClick={() => setEdit(!edit)}
               className="fa-solid fa-pen-to-square hover:text-yellow-500"></i>
           )}
-          <i onClick={()=> eliminarVehiculo()} className="fa-solid fa-trash-can hover:text-red-500"></i>
+          <i onClick={() => eliminarVehiculo()} className="fa-solid fa-trash-can hover:text-red-500"></i>
         </div>
       </td>
     </tr>
@@ -205,7 +206,6 @@ const FromularioCreacionVehiculos = ({
 
   const form = useRef(null);
 
-
   const submitForm = (e) => {
     e.preventDefault();
     const fd = new FormData(form.current);
@@ -218,7 +218,7 @@ const FromularioCreacionVehiculos = ({
     setMostrarTabla(true)
     setVehiculos([...listaVehiculos, nuevoVehiculo])
     toast.success("vehículo agregado con éxito")
-  }
+  };
 
   return (
     <div className='flex flex-col items-center justify-center'>
@@ -273,6 +273,6 @@ const FromularioCreacionVehiculos = ({
       </form>
     </div>
 
-  )
-}
-export default Vehiculos
+  );
+};
+export default Vehiculos;

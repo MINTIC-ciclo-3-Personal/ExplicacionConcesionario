@@ -1,11 +1,11 @@
-import useActiveRoute from 'hooks/useActiveRoute'
-import React from 'react'
-import { Link } from 'react-router-dom'
-import ImagenLogo from './ImagenLogo'
+import useActiveRoute from 'hooks/useActiveRoute';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import ImagenLogo from './ImagenLogo';
 
 const Sidebar = () => {
     return (
-        <nav className='hidden md:flex md:w-72 w-72 border border-gray-300 h-full flex-col bg-gray-400 p-4'>
+        <nav className='hidden sd:flex sm:w-72 border border-gray-300 h-full flex-col bg-gray-400 p-4'>
             <Link to='/admin'>
                 <ImagenLogo />
             </Link>
@@ -15,10 +15,10 @@ const Sidebar = () => {
                 <Ruta icono='fa-solid fa-cart-shopping' ruta='/admin/ventas' nombre='Ventas' />
                 <Ruta icono='fa-solid fa-users' ruta='/admin/usuarios' nombre='Usiarios' />
             </div>
-            <button>Cerrar Cesión</button>
+            <button>Cerrar Sesión</button>
         </nav>
-    )
-}
+    );
+};
 
 const Ruta = ({ icono, ruta, nombre }) => {
 
@@ -34,7 +34,7 @@ const Ruta = ({ icono, ruta, nombre }) => {
                 {nombre}
             </button>
         </Link>
-    )
-}
+    );
+};
 
-export default Sidebar             
+export default Sidebar;         

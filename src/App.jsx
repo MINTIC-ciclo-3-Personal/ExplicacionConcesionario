@@ -1,21 +1,21 @@
-import { DarkModeContex } from 'context/darkMode'
-import AuthLayout from 'layouts/AuthLayout'
-import PrivateLayout from 'layouts/PrivateLayout'
-import PublicLayout from 'layouts/PublicLayout'
-import Admin from 'pages/admin/Index'
-import Clientes from 'pages/admin/Clientes'
-import Vehiculos from 'pages/admin/Vehiculos'
-import Index from 'pages/Index'
-import Login from 'pages/Login'
-import Registro from 'pages/Registro'
-import { useEffect, useState } from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import 'styles/styles.css'
+import { DarkModeContex } from 'context/darkMode';
+import AuthLayout from 'layouts/AuthLayout';
+import PrivateLayout from 'layouts/PrivateLayout';
+import PublicLayout from 'layouts/PublicLayout';
+import Admin from 'pages/admin/Index';
+import Clientes from 'pages/admin/Clientes';
+import Vehiculos from 'pages/admin/Vehiculos';
+import Index from 'pages/Index';
+import Login from 'pages/Login';
+import Registro from 'pages/Registro';
+import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import 'styles/styles.css';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   useEffect(() => {
-    console.log('modo dark:', darkMode)
+    console.log('modo dark:', darkMode);
   }, [darkMode]);
 
   return (
@@ -23,40 +23,38 @@ function App() {
       <DarkModeContex.Provider value={{ darkMode, setDarkMode }} >
         <Router>
           <Switch>
-            <Route path={["/admin", "/admin/vehiculos", "/admin/clientes"]} >
+            <Route path={['/admin', '/admin/vehiculos', '/admin/clientes']} >
               <PrivateLayout>
                 <Switch>
-                  <Route path="/admin/vehiculos">
+                  <Route path='/admin/vehiculos'>
                     <Vehiculos />
                   </Route>
-                  <Route path="/admin/clientes">
+                  <Route path='/admin/clientes'>
                     <Clientes />
                   </Route>
-                  <Route path="/admin">
+                  <Route path='/admin'>
                     <Admin />
                   </Route>
                 </Switch>
               </PrivateLayout>
             </Route>
-            <Route path={["/login", "/registro"]}>
+            <Route path={['/login', '/registro']}>
               <AuthLayout>
                 <Switch>
-                  <Route path="/login">
+                  <Route path='/login'>
                     <Login />
                   </Route>
-                  <Route path="/registro">
+                  <Route path='/registro'>
                     <Registro />
                   </Route>
                 </Switch>
               </AuthLayout>
             </Route>
-            <Route path={["/"]}>
+            <Route path={['/']}>
               <PublicLayout>
-                <Switch>
-                  <Route path="/">
+                  <Route path='/'>
                     <Index />
                   </Route>
-                </Switch>
               </PublicLayout>
             </Route>
           </Switch>
@@ -66,4 +64,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

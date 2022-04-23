@@ -1,27 +1,28 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const SidebarResponsive = () => {
     const [mostrarNavegacion, setMostrarNavegacion] = useState(false)
-
     return (
         <div
-            className='md:hidden'
+            className='sm:hidden'
             onClick={() => {
-                setMostrarNavegacion(!mostrarNavegacion)
+                setMostrarNavegacion(!mostrarNavegacion);
             }}
         >
             <i className={`mx-2 ${mostrarNavegacion ? "fa-solid fa-x" : "fa-solid fa-bars"} hover:text-yellow-600`}></i>
-            {mostrarNavegacion &&
+            {mostrarNavegacion && (
                 <ul className='bg-gray-700 flex flex-col mx-2'>
                     <ResponsiveRoute icono='fa-solid fa-user' ruta='/admin/perfil' nombre='Perfil' />
                     <ResponsiveRoute icono='fa-solid fa-car-side' ruta='/admin/vehiculos' nombre='Vehículos' />
                     <ResponsiveRoute icono='fa-solid fa-cart-shopping' ruta='/admin/ventas' nombre='Ventas' />
                     <ResponsiveRoute icono='fa-solid fa-users' ruta='/admin/usuarios' nombre='Usiarios' />
-                </ul>}
+                </ul>
+            )}
         </div>
-    )
-}
+    );
+};
+
 const ResponsiveRoute = ({ icono, ruta, nombre }) => {
     return (
         <Link to={ruta}>
@@ -30,7 +31,7 @@ const ResponsiveRoute = ({ icono, ruta, nombre }) => {
                 {nombre}
             </button>
         </Link>
-    )
-}
+    );
+};
 
-export default SidebarResponsive
+export default SidebarResponsive;

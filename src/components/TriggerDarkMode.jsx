@@ -1,17 +1,19 @@
-import React from 'react'
-import { useDarkMode } from 'context/darkMode'
+import React from 'react';
+import { useDarkMode } from 'context/darkMode';
 
 const TriggerDarkMode = () => {
     const { darkMode, setDarkMode } = useDarkMode();
     return (
         <div>
             <button
-                onClick={() => { setDarkMode(!darkMode) }}
+                onClick={() => { 
+                    setDarkMode(!darkMode);
+                }}
             >
-                {darkMode ? 'Desactivar' : 'Activar'} modo sexo
+                {darkMode ? 'Desactivar' : 'Activar'} modo dark
             </button>
         </div>
-    )
-}
+    );
+};
 
-export default TriggerDarkMode
+export default TriggerDarkMode;
