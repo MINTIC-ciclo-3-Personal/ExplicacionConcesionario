@@ -1,4 +1,4 @@
-import { DarkModeContex } from 'context/darkMode';
+import { DarkModeContext } from 'context/darkMode';
 import AuthLayout from 'layouts/AuthLayout';
 import PrivateLayout from 'layouts/PrivateLayout';
 import PublicLayout from 'layouts/PublicLayout';
@@ -20,7 +20,7 @@ function App() {
 
   return (
     <div className='App'>
-      <DarkModeContex.Provider value={{ darkMode, setDarkMode }} >
+      <DarkModeContext.Provider value={{ darkMode, setDarkMode }} >
         <Router>
           <Switch>
             <Route path={['/admin', '/admin/vehiculos', '/admin/clientes']} >
@@ -59,7 +59,7 @@ function App() {
             </Route>
           </Switch>
         </Router>
-      </DarkModeContex.Provider>
+      </DarkModeContext.Provider>
     </div>
   );
 }

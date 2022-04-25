@@ -104,25 +104,23 @@ const TablaVehiculos = ({ listaVehiculos }) => {
   return (
     <div className='flex flex-col items-center justify-center'>
       <h2 className='text-2xl font-extrabold text-gray-800'>Todos los vehículos</h2>
-      <form ref={form} onSubmit={submitEdit} className='w-full'>
-        <table className='tabla'>
-          <thead>
-            <tr>
-              <th>Nombre del vehículo</th>
-              <th>Marca del vehículo</th>
-              <th>Modelo del vehículo</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {listaVehiculos.map((vehiculo) => {
-              return (
-                <FilaVehiculo key={nanoid()} vehiculo={vehiculo} />
-              );
-            })}
-          </tbody>
-        </table>
-      </form>
+      <table className='tabla'>
+        <thead>
+          <tr>
+            <th>Nombre del vehículo</th>
+            <th>Marca del vehículo</th>
+            <th>Modelo del vehículo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {listaVehiculos.map((vehiculo) => {
+            return (
+              <FilaVehiculo key={nanoid()} vehiculo={vehiculo} />
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };
@@ -136,14 +134,10 @@ const FilaVehiculo = ({ vehiculo }) => {
   })
 
   const actualizarVehiculo = () => {
-    console.log(infoNuevoVehiculo);
+    console.log(infoNuevoVehiculo)
     //enviar la info al backend
   }
 
-
-  const eliminarVehiculo = () => {
-
-  }
   return (
     <tr>
       {edit ? (
@@ -180,7 +174,6 @@ const FilaVehiculo = ({ vehiculo }) => {
           <td>{vehiculo.model}</td>
         </>
       )}
-
       <td>
         <div className='flex w-full justify-around'>
           {edit ? (
@@ -192,7 +185,7 @@ const FilaVehiculo = ({ vehiculo }) => {
               onClick={() => setEdit(!edit)}
               className="fa-solid fa-pen-to-square hover:text-yellow-500"></i>
           )}
-          <i onClick={() => eliminarVehiculo()} className="fa-solid fa-trash-can hover:text-red-500"></i>
+          <i className="fa-solid fa-trash-can hover:text-red-500"></i>
         </div>
       </td>
     </tr>

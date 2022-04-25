@@ -1,11 +1,11 @@
-import useActiveRoute from 'hooks/useActiveRoute';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import ImagenLogo from './ImagenLogo';
+import { Link } from 'react-router-dom';
+import useActiveRoute from 'hooks/useActiveRoute';
 
 const Sidebar = () => {
     return (
-        <nav className='hidden sd:flex sm:w-72 border border-gray-300 h-full flex-col bg-gray-400 p-4'>
+        <nav className='hidden sm:flex sm:w-72 border border-gray-300 h-full flex-col bg-gray-400 p-4'>
             <Link to='/admin'>
                 <ImagenLogo />
             </Link>
@@ -21,8 +21,8 @@ const Sidebar = () => {
 };
 
 const Ruta = ({ icono, ruta, nombre }) => {
-
     const isActive = useActiveRoute(ruta);
+
     return (
         <Link to={ruta}>
             <button
