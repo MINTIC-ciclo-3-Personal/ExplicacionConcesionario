@@ -1,108 +1,88 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 import { nanoid } from 'nanoid';
-
-//Realizar un formulario que le pida al usuario su edad y muestre un mensaje
-//que diga si es mayor de edad o no
-
-const vehiculosBackend = [
-  {
-    name: "Corolla",
-    brand: "Toyota",
-    model: 2014
-  },
-  {
-    name: "Sandero",
-    brand: "Renault",
-    model: 2020
-  },
-  {
-    name: "Rav4",
-    brand: "Toyota",
-    model: 2021
-  },
-  {
-    name: "Fiesta",
-    brand: "Ford",
-    model: 2017
-  },
-  {
-    name: "Mazda 3",
-    brand: "Mazda",
-    model: 2020
-  },
-  {
-    name: "Onix",
-    brand: "Chevrolet",
-    model: 2020
-  },
-];
+import 'react-toastify/dist/ReactToastify.css';
 
 const Vehiculos = () => {
-  const [mostrarTabla, setMostrarTabla] = useState(true); //Estos son estados
+  const [mostrarTabla, setMostrarTabla] = useState(true);
   const [vehiculos, setVehiculos] = useState([]);
-  const [textoBoton, setTextoBoton] = useState('Crear Nuevo Vechículo');
-  const [colorBoton, setColorBoton] = useState('bg-indigo-500');
+  const [textoBoton, setTextoBoton] = useState('Crear Nuevo Vehículo');
+  const [colorBoton, setColorBoton] = useState('indigo');
+  const [ejecutarConsulta, setEjecutarConsulta] = useState(true);
+
+  const obtenerVehiculos = async () => {
+    const options = { method: 'GET', url: 'https://vast-waters-45728.herokuapp.com/vehicle/' };
+    await axios
+      .request(options)
+      .then(function (response) {
+        setVehiculos(response.data);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+    setEjecutarConsulta(false);
+  };
 
   useEffect(() => {
-    //obtener lista del vehiculo desde el frontend
-    setVehiculos(vehiculosBackend);
-  }, [])
+    console.log('consulta', ejecutarConsulta);
+    if (ejecutarConsulta) {
+      obtenerVehiculos();
+    }
+  }, [ejecutarConsulta]);
 
   useEffect(() => {
+    //obtener lista de vehículos desde el backend
     if (mostrarTabla) {
-      setTextoBoton('Crear Nuevo Vechículo');
-      setColorBoton('bg-indigo-500');
-    } else {
-      setTextoBoton('Mostrar Todos los Vehículos');
-      setColorBoton('bg-red-500');
+      setEjecutarConsulta(true);
     }
   }, [mostrarTabla]);
 
+  useEffect(() => {
+    if (mostrarTabla) {
+      setTextoBoton('Crear Nuevo Vehículo');
+      setColorBoton('indigo');
+    } else {
+      setTextoBoton('Mostrar Todos los vehículos');
+      setColorBoton('green');
+    }
+  }, [mostrarTabla]);
   return (
     <div className='flex h-full w-full flex-col items-center justify-start p-8'>
-      <div className='flex flex-col'>
+      <div className='flex flex-col w-full'>
         <h2 className='text-3xl font-extrabold text-gray-900'>
-          Página de administración de vehiculos
+          Página de administración de vehículos
         </h2>
         <button
           onClick={() => {
             setMostrarTabla(!mostrarTabla);
           }}
-          className={`text-white ${colorBoton} p-5 rounded-full m-6 w-280`}
+          className={`text-white bg-${colorBoton}-500 p-5 rounded-full m-6 w-28 self-end`}
         >
           {textoBoton}
         </button>
       </div>
       {mostrarTabla ? (
-        <TablaVehiculos listaVehiculos={vehiculos} />
+        <TablaVehiculos listaVehiculos={vehiculos} setEjecutarConsulta={setEjecutarConsulta} />
       ) : (
-        <FromularioCreacionVehiculos
+        <FormularioCreacionVehiculos
           setMostrarTabla={setMostrarTabla}
           listaVehiculos={vehiculos}
           setVehiculos={setVehiculos}
         />
       )}
-      <ToastContainer position="bottom-center" autoClose={5000} />
+      <ToastContainer position='bottom-center' autoClose={5000} />
     </div>
   );
 };
 
-const TablaVehiculos = ({ listaVehiculos }) => {
-  const form = useRef(null);
+const TablaVehiculos = ({ listaVehiculos, setEjecutarConsulta }) => {
   useEffect(() => {
-    //console.log('Este es el listado de vehiculos en el componente de tabla', listaVehiculos)
+    console.log('este es el listado de vehiculos en el componente de tabla', listaVehiculos);
   }, [listaVehiculos]);
 
-  const submitEdit = (e) => {
-    e.preventDefault();
-    const fd = new FormData(form.current)
-    console.log(e);
-  }
-
   return (
-    <div className='flex flex-col items-center justify-center'>
+    <div className='flex flex-col items-center justify-center w-full'>
       <h2 className='text-2xl font-extrabold text-gray-800'>Todos los vehículos</h2>
       <table className='tabla'>
         <thead>
@@ -116,7 +96,11 @@ const TablaVehiculos = ({ listaVehiculos }) => {
         <tbody>
           {listaVehiculos.map((vehiculo) => {
             return (
-              <FilaVehiculo key={nanoid()} vehiculo={vehiculo} />
+              <FilaVehiculo
+                key={nanoid()}
+                vehiculo={vehiculo}
+                setEjecutarConsulta={setEjecutarConsulta}
+              />
             );
           })}
         </tbody>
@@ -125,18 +109,58 @@ const TablaVehiculos = ({ listaVehiculos }) => {
   );
 };
 
-const FilaVehiculo = ({ vehiculo }) => {
+const FilaVehiculo = ({ vehiculo, setEjecutarConsulta }) => {
   const [edit, setEdit] = useState(false);
   const [infoNuevoVehiculo, setInfoNuevoVehiculo] = useState({
     name: vehiculo.name,
     brand: vehiculo.brand,
     model: vehiculo.model,
-  })
+  });
 
-  const actualizarVehiculo = () => {
-    console.log(infoNuevoVehiculo)
+  const actualizarVehiculo = async () => {
+    console.log(infoNuevoVehiculo);
     //enviar la info al backend
-  }
+    const options = {
+      method: 'PATCH',
+      url: 'https://vast-waters-45728.herokuapp.com/vehicle/update/',
+      headers: { 'Content-Type': 'application/json' },
+      data: { ...infoNuevoVehiculo, id: vehiculo._id },
+    };
+
+    await axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data);
+        toast.success('Vehículo modificado con éxito');
+        setEdit(false);
+        setEjecutarConsulta(true);
+      })
+      .catch(function (error) {
+        toast.error('Error modificando el vehículo');
+        console.error(error);
+      });
+  };
+
+  const eliminarVehiculo = async () => {
+    const options = {
+      method: 'DELETE',
+      url: 'https://vast-waters-45728.herokuapp.com/vehicle/delete/',
+      headers: { 'Content-Type': 'application/json' },
+      data: { id: vehiculo._id },
+    };
+
+    await axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data);
+        toast.success('vehículo eliminado con éxito');
+        setEjecutarConsulta(true);
+      })
+      .catch(function (error) {
+        console.error(error);
+        toast.error('Error eliminando el vehículo');
+      });
+  };
 
   return (
     <tr>
@@ -145,25 +169,29 @@ const FilaVehiculo = ({ vehiculo }) => {
           <td>
             <input
               className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
-              type="text"
+              type='text'
               value={infoNuevoVehiculo.name}
-              onChange={e => setInfoNuevoVehiculo({ ...infoNuevoVehiculo, name: e.target.value })}
+              onChange={(e) => setInfoNuevoVehiculo({ ...infoNuevoVehiculo, name: e.target.value })}
             />
           </td>
           <td>
             <input
               className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
-              type="text"
+              type='text'
               value={infoNuevoVehiculo.brand}
-              onChange={e => setInfoNuevoVehiculo({ ...infoNuevoVehiculo, brand: e.target.value })}
+              onChange={(e) =>
+                setInfoNuevoVehiculo({ ...infoNuevoVehiculo, brand: e.target.value })
+              }
             />
           </td>
           <td>
             <input
               className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
-              type="text"
+              type='text'
               value={infoNuevoVehiculo.model}
-              onChange={e => setInfoNuevoVehiculo({ ...infoNuevoVehiculo, model: e.target.value })}
+              onChange={(e) =>
+                setInfoNuevoVehiculo({ ...infoNuevoVehiculo, model: e.target.value })
+              }
             />
           </td>
         </>
@@ -179,27 +207,28 @@ const FilaVehiculo = ({ vehiculo }) => {
           {edit ? (
             <i
               onClick={() => actualizarVehiculo()}
-              class="fa-solid fa-check text-green-700 hover:text-green-500"></i>
+              className='fas fa-check text-green-700 hover:text-green-500'
+            />
           ) : (
             <i
               onClick={() => setEdit(!edit)}
-              className="fa-solid fa-pen-to-square hover:text-yellow-500"></i>
+              className='fas fa-pencil-alt text-yellow-700 hover:text-yellow-500'
+            />
           )}
-          <i className="fa-solid fa-trash-can hover:text-red-500"></i>
+          <i
+            onClick={() => eliminarVehiculo()}
+            className='fas fa-trash text-red-700 hover:text-red-500'
+          />
         </div>
       </td>
     </tr>
-  )
-}
+  );
+};
 
-const FromularioCreacionVehiculos = ({
-  setMostrarTabla,
-  listaVehiculos,
-  setVehiculos }) => {
-
+const FormularioCreacionVehiculos = ({ setMostrarTabla, listaVehiculos, setVehiculos }) => {
   const form = useRef(null);
 
-  const submitForm = (e) => {
+  const submitForm = async (e) => {
     e.preventDefault();
     const fd = new FormData(form.current);
 
@@ -208,30 +237,46 @@ const FromularioCreacionVehiculos = ({
       nuevoVehiculo[key] = value;
     });
 
-    setMostrarTabla(true)
-    setVehiculos([...listaVehiculos, nuevoVehiculo])
-    toast.success("vehículo agregado con éxito")
+    const options = {
+      method: 'POST',
+      url: 'https://vast-waters-45728.herokuapp.com/vehicle/create',
+      headers: { 'Content-Type': 'application/json' },
+      data: { name: nuevoVehiculo.name, brand: nuevoVehiculo.brand, model: nuevoVehiculo.model },
+    };
+
+    await axios
+      .request(options)
+      .then(function (response) {
+        console.log(response.data);
+        toast.success('Vehículo agregado con éxito');
+      })
+      .catch(function (error) {
+        console.error(error);
+        toast.error('Error creando un vehículo');
+      });
+
+    setMostrarTabla(true);
   };
 
   return (
     <div className='flex flex-col items-center justify-center'>
-      <h2 className='text-2xl font-extrabold text-gray-800'>Crear Nuevo Vehículo</h2>
+      <h2 className='text-2xl font-extrabold text-gray-800'>Crear nuevo vehículo</h2>
       <form ref={form} onSubmit={submitForm} className='flex flex-col'>
         <label className='flex flex-col' htmlFor='nombre'>
-          Nombre del vehiculo
+          Nombre del vehículo
           <input
-            name='nombre'
+            name='name'
             className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
-            type="text"
+            type='text'
             placeholder='Corolla'
             required
           />
         </label>
         <label className='flex flex-col' htmlFor='marca'>
-          Marca del vehiculo
+          Marca del vehículo
           <select
             className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
-            name="marca"
+            name='brand'
             required
             defaultValue={0}
           >
@@ -246,26 +291,27 @@ const FromularioCreacionVehiculos = ({
           </select>
         </label>
         <label className='flex flex-col' htmlFor='modelo'>
-          Modelo del vehiculo
+          Modelo del vehículo
           <input
-            name='modelo'
+            name='model'
             className='bg-gray-50 border border-gray-600 p-2 rounded-lg m-2'
-            type="number"
+            type='number'
             min={1992}
             max={2022}
             placeholder='2014'
             required
           />
         </label>
+
         <button
           type='submit'
           className='col-span-2 bg-green-400 p-2 rounded-full shadow-md hover:bg-green-600 text-white'
         >
-          Guardar Vehículo
+          Guardar vehiculo
         </button>
       </form>
     </div>
-
   );
 };
+
 export default Vehiculos;
