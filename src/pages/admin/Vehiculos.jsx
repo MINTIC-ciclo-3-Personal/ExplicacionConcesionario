@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
+import Tooltip from '@mui/material/Tooltip'
+import Dialog from '@mui/material/Dialog'
 import 'react-toastify/dist/ReactToastify.css';
 
 const Vehiculos = () => {
@@ -77,40 +79,68 @@ const Vehiculos = () => {
 };
 
 const TablaVehiculos = ({ listaVehiculos, setEjecutarConsulta }) => {
+  const [busqueda, setBusqueda] = useState('');
+  const [vehiculosFiltrados, setVehiculosFiltrados] = useState(listaVehiculos)
+
   useEffect(() => {
-    console.log('este es el listado de vehiculos en el componente de tabla', listaVehiculos);
-  }, [listaVehiculos]);
+    setVehiculosFiltrados(
+      listaVehiculos.filter((elemento) => {
+        console.log('elemento', elemento);
+        return JSON.stringify(elemento).toLowerCase().includes(busqueda.toLowerCase());
+      })
+    );
+  }, [busqueda, listaVehiculos])
 
   return (
     <div className='flex flex-col items-center justify-center w-full'>
+      <input
+        value={busqueda}
+        onChange={e => setBusqueda(e.target.value)}
+        placeholder='Buscar'
+        className='border border-gray-700 px-3 py-1 self-start rounded-md focus:outline-none focus:border-indigo-500'
+      />
       <h2 className='text-2xl font-extrabold text-gray-800'>Todos los vehículos</h2>
-      <table className='tabla'>
-        <thead>
-          <tr>
-            <th>Nombre del vehículo</th>
-            <th>Marca del vehículo</th>
-            <th>Modelo del vehículo</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {listaVehiculos.map((vehiculo) => {
-            return (
-              <FilaVehiculo
-                key={nanoid()}
-                vehiculo={vehiculo}
-                setEjecutarConsulta={setEjecutarConsulta}
-              />
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+      <div className='hidden sm:flex w-full'>
+        <table className='tabla'>
+          <thead>
+            <tr>
+              <th>Nombre del vehículo</th>
+              <th>Marca del vehículo</th>
+              <th>Modelo del vehículo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {vehiculosFiltrados.map((vehiculo) => {
+              return (
+                <FilaVehiculo
+                  key={nanoid()}
+                  vehiculo={vehiculo}
+                  setEjecutarConsulta={setEjecutarConsulta}
+                />
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <div className='flex flex-col w-full m-2 sm:hidden'>
+        {vehiculosFiltrados.map((el) => {
+          return (
+            <div className='bg-gray-400 m-2 shadow-xl flex flex-col p-2 rounded-xl'>
+              <span>{el.name}</span>
+              <span>{el.brand}</span>
+              <span>{el.model}</span>
+            </div>
+          )
+        })}
+      </div>
+    </div >
   );
 };
 
 const FilaVehiculo = ({ vehiculo, setEjecutarConsulta }) => {
   const [edit, setEdit] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [infoNuevoVehiculo, setInfoNuevoVehiculo] = useState({
     name: vehiculo.name,
     brand: vehiculo.brand,
@@ -205,21 +235,58 @@ const FilaVehiculo = ({ vehiculo, setEjecutarConsulta }) => {
       <td>
         <div className='flex w-full justify-around'>
           {edit ? (
-            <i
-              onClick={() => actualizarVehiculo()}
-              className='fas fa-check text-green-700 hover:text-green-500'
-            />
+            <>
+              <Tooltip title='Confirmar edición' arrow>
+                <i
+                  onClick={() => actualizarVehiculo()}
+                  className='fas fa-check text-green-700 hover:text-green-500'
+                />
+              </Tooltip>
+              <Tooltip title='Cancelar edición' arrow>
+                <i
+                  onClick={() => setEdit(!edit)}
+                  className='fa-solid fa-ban text-orange-600 hover:text-yellow-500'
+                />
+              </Tooltip>
+            </>
           ) : (
-            <i
-              onClick={() => setEdit(!edit)}
-              className='fas fa-pencil-alt text-yellow-700 hover:text-yellow-500'
-            />
+            <>
+              <Tooltip title='Editar Vehículo' arrow>
+                <i
+                  onClick={() => setEdit(!edit)}
+                  className='fas fa-pencil-alt text-yellow-700 hover:text-yellow-500'
+                />
+              </Tooltip>
+              <Tooltip title='Eliminar Vehículo' arrow>
+                <i
+                  onClick={() => setOpenDialog(true)}
+                  className='fas fa-trash text-red-700 hover:text-red-500'
+                />
+              </Tooltip>
+            </>
           )}
-          <i
-            onClick={() => eliminarVehiculo()}
-            className='fas fa-trash text-red-700 hover:text-red-500'
-          />
         </div>
+        <Dialog open={openDialog}>
+          <div className='p-8 flex flex-col'>
+            <h1 className='text-gray-900 text-2xl-font-bold'>
+              ¿Está seguro de querer eliminar el vehículo?
+            </h1>
+            <div className='flex w-full items-center justify-center my-4'>
+              <button
+                onClick={() => eliminarVehiculo()}
+                className='mx-2 px-4 py-2 text-white bg-green-500 hover:bg-green-700 rounded-md shadow-md'
+              >
+                Sí
+              </button>
+              <button
+                onClick={() => setOpenDialog(false)}
+                className='mx-2 px-4 py-2 text-white bg-red-500 hover:bg-red-700 rounded-md shadow-md'
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </Dialog>
       </td>
     </tr>
   );
