@@ -5,6 +5,7 @@ import PublicLayout from 'layouts/PublicLayout';
 import Admin from 'pages/admin/Index';
 import Clientes from 'pages/admin/Clientes';
 import Vehiculos from 'pages/admin/Vehiculos';
+import Test from 'pages/Test';
 import Index from 'pages/Index';
 import Login from 'pages/Login';
 import Registro from 'pages/Registro';
@@ -23,7 +24,7 @@ function App() {
       <DarkModeContext.Provider value={{ darkMode, setDarkMode }} >
         <Router>
           <Switch>
-            <Route path={['/admin', '/admin/vehiculos', '/admin/clientes']} >
+            <Route path={['/admin', '/admin/vehiculos', '/admin/clientes', '/test']} >
               <PrivateLayout>
                 <Switch>
                   <Route path='/admin/vehiculos'>
@@ -31,6 +32,9 @@ function App() {
                   </Route>
                   <Route path='/admin/clientes'>
                     <Clientes />
+                  </Route>
+                  <Route path='/test'>
+                    <Test />
                   </Route>
                   <Route path='/admin'>
                     <Admin />

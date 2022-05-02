@@ -4,6 +4,7 @@ import axios from 'axios';
 import { nanoid } from 'nanoid';
 import Tooltip from '@mui/material/Tooltip'
 import Dialog from '@mui/material/Dialog'
+import { obtenerVehiculos } from 'utils/api';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Vehiculos = () => {
@@ -13,23 +14,10 @@ const Vehiculos = () => {
   const [colorBoton, setColorBoton] = useState('indigo');
   const [ejecutarConsulta, setEjecutarConsulta] = useState(true);
 
-  const obtenerVehiculos = async () => {
-    const options = { method: 'GET', url: 'https://vast-waters-45728.herokuapp.com/vehicle/' };
-    await axios
-      .request(options)
-      .then(function (response) {
-        setVehiculos(response.data);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
-    setEjecutarConsulta(false);
-  };
-
   useEffect(() => {
     console.log('consulta', ejecutarConsulta);
     if (ejecutarConsulta) {
-      obtenerVehiculos();
+      obtenerVehiculos(setVehiculos, setEjecutarConsulta);
     }
   }, [ejecutarConsulta]);
 
@@ -148,13 +136,12 @@ const FilaVehiculo = ({ vehiculo, setEjecutarConsulta }) => {
   });
 
   const actualizarVehiculo = async () => {
-    console.log(infoNuevoVehiculo);
     //enviar la info al backend
     const options = {
       method: 'PATCH',
-      url: 'https://vast-waters-45728.herokuapp.com/vehicle/update/',
+      url: `http://localhost:5000/vehiculos/${vehiculo._id}`,
       headers: { 'Content-Type': 'application/json' },
-      data: { ...infoNuevoVehiculo, id: vehiculo._id },
+      data: { ...infoNuevoVehiculo},
     };
 
     await axios
@@ -174,7 +161,7 @@ const FilaVehiculo = ({ vehiculo, setEjecutarConsulta }) => {
   const eliminarVehiculo = async () => {
     const options = {
       method: 'DELETE',
-      url: 'https://vast-waters-45728.herokuapp.com/vehicle/delete/',
+      url: 'http://localhost:5000/vehiculos/eliminar',
       headers: { 'Content-Type': 'application/json' },
       data: { id: vehiculo._id },
     };
@@ -306,7 +293,7 @@ const FormularioCreacionVehiculos = ({ setMostrarTabla, listaVehiculos, setVehic
 
     const options = {
       method: 'POST',
-      url: 'https://vast-waters-45728.herokuapp.com/vehicle/create',
+      url: 'http://localhost:5000/vehiculos/nuevo',
       headers: { 'Content-Type': 'application/json' },
       data: { name: nuevoVehiculo.name, brand: nuevoVehiculo.brand, model: nuevoVehiculo.model },
     };
