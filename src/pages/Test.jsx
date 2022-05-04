@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+/* import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -32,17 +32,18 @@ const Test = () => {
         console.log(nuevaVenta)
 
         const informacionConsolidada={
-            valor:nuevaVenta.cantidadVenta,
+            valor: nuevaVenta.cantidadVenta,
             vehiculo:vehiculos.filter((el) => el._id === nuevaVenta.vehiculo)[0],
             vendedor:vendedores.filter((el) => el._id === nuevaVenta.vendedor)[0],
             
         };
+        console.log(informacionConsolidada)
 
         const options = {
             method: 'POST',
             url: 'http://localhost:5000/ventas/',
             headers: { 'Content-Type': 'application/json' },
-            data: nuevaVenta,
+            data: informacionConsolidada,
         };
 
         await axios
@@ -84,4 +85,4 @@ const Test = () => {
     )
 }
 
-export default Test
+export default Test */
