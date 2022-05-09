@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react'
 import { useAuth0 } from "@auth0/auth0-react";
 import ReactLoading from 'react-loading'
-import { Link } from 'react-router-dom';
+import { obtenerDatosUsuario } from 'utils/api';
+import { useUser } from 'context/userContext';
 
 const PrivateRoute = ({ children }) => {
     const { isAuthenticated, isLoading, loginWithRedirect, getAccessTokenSilently } = useAuth0();
+    const {setUserData} = useUser ();
 
     useEffect(() => {
         const fetchAuth0Token = async () => {
@@ -15,10 +17,22 @@ const PrivateRoute = ({ children }) => {
                 } else {
                     //pedir token
                 } */
+
+                //1. pedir token a auth0
                 const accessToken = await getAccessTokenSilently({
                     audience: 'api-auth-concesionario-mintic',
                 });
+                //2. recibir token de auth0
                 localStorage.setItem('token', accessToken)
+                await obtenerDatosUsuario(
+                    (response) => {
+                        console.log('respuesta con los datos del usuario', response)
+                        setUserData(response.data);
+                    },
+                    (err) => {
+                        console.log('err', err)
+                    })
+                //console.log(accessToken)
             } catch (e) {
                 console.log('catch: ', e.message);
             }
@@ -26,7 +40,7 @@ const PrivateRoute = ({ children }) => {
         if (isAuthenticated) {
             fetchAuth0Token();
         }
-    }, [isAuthenticated, getAccessTokenSilently]);
+    }, [isAuthenticated, getAccessTokenSilently, setUserData]);
 
 
     if (isLoading) return <ReactLoading type='bars' color='#abc123' height={'10%'} width={'10%'} />;

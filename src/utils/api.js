@@ -57,7 +57,7 @@ export const borrarVehiculo = async (id, successCallback, errorCallback) => {
 
 export const obtenerUsuarios = async (successCallback, errorCallback) => {
   const options = {
-    method: 'GET',
+    method: 'GET',  
     url: 'http://localhost:5000/usuarios/',
     headers: {
       Authorization: getToken(),
@@ -66,6 +66,34 @@ export const obtenerUsuarios = async (successCallback, errorCallback) => {
   };
   await axios.request(options).then(successCallback).catch(errorCallback);
 }
+
+export const obtenerDatosUsuario = async (successCallback, errorCallback) => {
+  const options = {
+    method: 'GET',
+    url: 'http://localhost:5000/usuarios/self',
+    headers: {
+      Authorization: getToken(),  //3. enviarle el token a el backend
+      'Content-Type': 'application/json'
+    },
+  };
+  await axios.request(options).then(successCallback).catch(errorCallback);
+}
+
+export const editarUsuario = async (id, data, successCallback, errorCallback) => {
+  const options = {
+    method: 'PATCH',
+    url: `http://localhost:5000/usuarios/${id}/`,
+    headers: {
+      Authorization: getToken(),
+      'Content-Type': 'application/json'
+    },
+    data,
+  };
+  await axios.request(options).then(successCallback).catch(errorCallback);
+}
+
+
+//CRUD de ventas
 
 export const crearVenta = async (data, successCallback, errorCallback) => {
   const options = {
