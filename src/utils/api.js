@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const baseURL= "https://boiling-plains-03396.herokuapp.com"
+
 const getToken = () => {
   return `Bearer ${localStorage.getItem('token')}`
 }
@@ -7,7 +9,7 @@ const getToken = () => {
 export const obtenerVehiculos = async (successCallback, errorCallback) => {
   const options = {
     method: 'GET',
-    url: 'http://localhost:5000/vehiculos',
+    url: `${baseURL}/vehiculos/`,
     headers: {
       Authorization: getToken(),
     }
@@ -18,7 +20,7 @@ export const obtenerVehiculos = async (successCallback, errorCallback) => {
 export const crearVehiculo = async (data, successCallback, errorCallback) => {
   const options = {
     method: 'POST',
-    url: 'http://localhost:5000/vehiculos/',
+    url: `${baseURL}/vehiculos/`,
     headers: {
       Authorization: getToken(),
       'Content-Type': 'application/json'
@@ -31,7 +33,7 @@ export const crearVehiculo = async (data, successCallback, errorCallback) => {
 export const editarVehiculo = async (id, data, successCallback, errorCallback) => {
   const options = {
     method: 'PATCH',
-    url: `http://localhost:5000/vehiculos/${id}/`,
+    url: `${baseURL}/vehiculos/${id}/`,
     headers: {
       Authorization: getToken(),
       'Content-Type': 'application/json'
@@ -44,7 +46,7 @@ export const editarVehiculo = async (id, data, successCallback, errorCallback) =
 export const borrarVehiculo = async (id, successCallback, errorCallback) => {
   const options = {
     method: 'DELETE',
-    url: `http://localhost:5000/vehiculos/${id}/`,
+    url: `${baseURL}/vehiculos/${id}/`,
     headers: {
       Authorization: getToken(),
       'Content-Type': 'application/json'
@@ -58,7 +60,7 @@ export const borrarVehiculo = async (id, successCallback, errorCallback) => {
 export const obtenerUsuarios = async (successCallback, errorCallback) => {
   const options = {
     method: 'GET',  
-    url: 'http://localhost:5000/usuarios/',
+    url: `${baseURL}/usuarios/`,
     headers: {
       Authorization: getToken(),
       'Content-Type': 'application/json'
@@ -70,7 +72,7 @@ export const obtenerUsuarios = async (successCallback, errorCallback) => {
 export const obtenerDatosUsuario = async (successCallback, errorCallback) => {
   const options = {
     method: 'GET',
-    url: 'http://localhost:5000/usuarios/self',
+    url: `${baseURL}/usuarios/self/`,
     headers: {
       Authorization: getToken(),  //3. enviarle el token a el backend
       'Content-Type': 'application/json'
@@ -82,7 +84,7 @@ export const obtenerDatosUsuario = async (successCallback, errorCallback) => {
 export const editarUsuario = async (id, data, successCallback, errorCallback) => {
   const options = {
     method: 'PATCH',
-    url: `http://localhost:5000/usuarios/${id}/`,
+    url: `${baseURL}/usuarios/${id}/`,
     headers: {
       Authorization: getToken(),
       'Content-Type': 'application/json'
@@ -97,7 +99,7 @@ export const editarUsuario = async (id, data, successCallback, errorCallback) =>
 
 export const crearVenta = async (data, successCallback, errorCallback) => {
   const options = {
-    method: 'POST', url: 'http://localhost:5000/ventas/',
+    method: 'POST', url: `${baseURL}/ventas/`,
     headers: {
       Authorization: getToken(),
       'Content-Type': 'application/json'
@@ -108,7 +110,7 @@ export const crearVenta = async (data, successCallback, errorCallback) => {
 }
 
 /* export const obtenerUsuarios = async (setUsuarios, setEjecutarConsulta = () => { }) => {
-  const options = { method: 'GET', url: 'http://localhost:5000/vehiculos' };
+  const options = { method: 'GET', url: `${baseURL}/vehiculos' };
   await axios
     .request(options)
     .then(function (response) {
