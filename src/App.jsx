@@ -30,7 +30,7 @@ function App() {
     <Auth0Provider
       domain="misiontic-concesionario-personal.us.auth0.com"
       clientId="4vwVf1aGGdJrMZgSPAAVXUmWSodxmlbT"
-      redirectUri='http://localhost:3000/admin'
+      redirectUri='https://salty-fjord-61443.herokuapp.com/admin'
       audience='api-auth-concesionario-mintic'
     >
       <div className='App'>
