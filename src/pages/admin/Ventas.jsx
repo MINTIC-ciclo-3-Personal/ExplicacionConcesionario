@@ -8,7 +8,7 @@ const Ventas = () => {
     const form = useRef(null)
     const [vendedores, setVendedores] = useState([]);
     const [vehiculos, setVehiculos] = useState([]);
-    const [vehiculosTabla, setVehiculosTabla] =useState ([]);
+    const [vehiculosTabla, setVehiculosTabla] = useState([]);
 
     useEffect(() => {
         const fetchVendedores = async () => {
@@ -49,39 +49,27 @@ const Ventas = () => {
 
         const listaVehiculos = Object.keys(formData)
             .map((k) => {
-            if (k.includes('vehiculo')) {
-                return vehiculosTabla.filter(v=>v._id===formData[k])[0];
-            }
-            return null
-        }).filter(v=>v);
-
-        console.log('lista antes de cantidad',listaVehiculos)
-
-        Object.keys(formData).forEach((k) => {
-        if (k.includes('cantidad')) {
-            const indice = parseInt(k.split('_')[1])
-            listaVehiculos[indice]['cantidad']=formData[k];
-        }
-    });
+                if (k.includes('vehiculo')) {
+                    return vehiculosTabla.filter(v => v._id === formData[k])[0];
+                }
+                return null
+            }).filter(v => v);
 
         const datosVenta = {
-            vendedor: vendedores.filter(v=>v._id===formData.vendedor)[0],
+            vendedor: vendedores.filter(v => v._id === formData.vendedor)[0],
             valor: formData.valor,
             vehiculos: listaVehiculos,
         }
 
-        console.log('listaVehiculos',listaVehiculos)
-
         await crearVenta(
             datosVenta,
-            (response)=>{
+            (response) => {
                 console.log(response);
             },
-            (error)=>{
+            (error) => {
                 console.error(error);
             }
         )
-
     };
 
     return (
@@ -93,18 +81,16 @@ const Ventas = () => {
                     <select name="vendedor" className='p-2' defaultValue='' required>
                         <option disabled value=''>Seleccione un vendedor</option>
                         {vendedores.map((el) => {
-                            return (
-                                <option
-                                    key={nanoid()}
-                                    value={el._id}
-                                >
-                                    {`${el.name} ${el.lastname}`}
-                                </option>)
+                            return <option key={nanoid()} value={el._id}>{`${el._id} ${el.email}`}</option>
                         })}
                     </select>
                 </label>
 
-                <TablaVehiculos vehiculos={vehiculos} setVehiculos={setVehiculos} setVehiculosTabla={setVehiculosTabla}/>
+                <TablaVehiculos 
+                    vehiculos={vehiculos} 
+                    setVehiculos={setVehiculos} 
+                    setVehiculosTabla={setVehiculosTabla} 
+                />
 
                 <label htmlFor="valor" className='flex flex-col'>
                     <span className='text-2xl font-gray-900'>Valor Total Venta</span>
@@ -140,12 +126,12 @@ const TablaVehiculos = ({ vehiculos, setVehiculos, setVehiculosTabla }) => {
 
     const agregarNuevoVehiculo = () => {
         setFilasTabla([...filasTabla, vehiculoAAgregar])
-        setVehiculos(vehiculos.filter(v=> v._id!==vehiculoAAgregar._id))
+        setVehiculos(vehiculos.filter(v => v._id !== vehiculoAAgregar._id))
         setVehiculoAAgregar({})
     }
 
     const eliminarVehiculo = (vehiculoAEliminar) => {
-        setFilasTabla(filasTabla.filter(v => v._id!==vehiculoAEliminar._id))
+        setFilasTabla(filasTabla.filter(v => v._id !== vehiculoAEliminar._id))
         setVehiculos([...vehiculos, vehiculoAEliminar])
     }
 
@@ -156,7 +142,7 @@ const TablaVehiculos = ({ vehiculos, setVehiculos, setVehiculosTabla }) => {
                     <select
                         className='p-2'
                         value={vehiculoAAgregar._id ?? ''}
-                        onChange={(e) => 
+                        onChange={(e) =>
                             setVehiculoAAgregar(vehiculos.filter((v) => v._id === e.target.value)[0])}
                     >
                         <option disabled value=''>
@@ -204,14 +190,14 @@ const TablaVehiculos = ({ vehiculos, setVehiculos, setVehiculosTabla }) => {
                                 <td>{el.model}</td>
                                 <td>
                                     <label htmlFor={`cantidad_${index}`}>
-                                        <input type="number" name={`cantidad_${index}`}/>
+                                        <input type="number" name={`cantidad_${index}`} />
                                     </label>
                                 </td>
                                 <td>
-                                    <i onClick={()=> eliminarVehiculo (el)} className="fa-solid fa-trash"></i>
+                                    <i onClick={() => eliminarVehiculo(el)} className="fa-solid fa-trash"></i>
                                 </td>
                                 <td className='hidden'>
-                                    <input hidden defaultValue={el._id} name={`vehiculo_${index}`}/>
+                                    <input hidden defaultValue={el._id} name={`vehiculo_${index}`} />
                                 </td>
                             </tr>
                         )

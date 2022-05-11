@@ -15,6 +15,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import 'styles/styles.css';
 import { Auth0Provider } from "@auth0/auth0-react";
 import { UserContext } from 'context/userContext';
+import PrivateRoute from 'components/PrivateRoute';
+import PrivateComponent from 'components/PrivateComponent';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -32,7 +34,7 @@ function App() {
       audience='api-auth-concesionario-mintic'
     >
       <div className='App'>
-        <UserContext.Provider value={{userData, setUserData}}>
+        <UserContext.Provider value={{ userData, setUserData }}>
           <DarkModeContext.Provider value={{ darkMode, setDarkMode }} >
             <Router>
               <Switch>
@@ -40,16 +42,22 @@ function App() {
                   <PrivateLayout>
                     <Switch>
                       <Route path='/admin/vehiculos'>
-                        <Vehiculos />
+                        <PrivateRoute roleList={['admin']}>
+                          <Vehiculos />
+                        </PrivateRoute>
                       </Route>
                       <Route path='/admin/clientes'>
                         <Clientes />
                       </Route>
                       <Route path='/admin/ventas'>
-                        <Ventas />
+                        <PrivateComponent roleList={['admin', 'vendedor']}>
+                          <Ventas />
+                        </PrivateComponent>
                       </Route>
                       <Route path='/admin/usuarios'>
-                        <Usuarios />
+                        <PrivateComponent roleList={['admin']}>
+                          <Usuarios />
+                        </PrivateComponent>
                       </Route>
                       <Route path='/admin'>
                         <Admin />
@@ -71,9 +79,9 @@ function App() {
                 </Route>
                 <Route path={['/']}>
                   <PublicLayout>
-                      <Route path='/'>
-                        <Index />
-                      </Route>
+                    <Route path='/'>
+                      <Index />
+                    </Route>
                   </PublicLayout>
                 </Route>
               </Switch>
